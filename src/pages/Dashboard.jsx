@@ -2,6 +2,7 @@ import Sidebar from "../components/dashboard/Sidebar";
 import Topbar from "../components/dashboard/Topbar";
 import StatsCards from "../components/dashboard/StatsCards";
 import RecentProjects from "../components/dashboard/RecentProjects";
+import QuickActions from "../components/dashboard/QuickActions";
 
 function Dashboard() {
   return (
@@ -12,6 +13,7 @@ function Dashboard() {
         <Topbar />
         <StatsCards />
         <RecentProjects />
+        <QuickActions />
       </main>
     </div>
   );
