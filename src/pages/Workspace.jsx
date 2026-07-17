@@ -1,7 +1,10 @@
+import { useState } from "react";
+
 import Sidebar from "../components/dashboard/Sidebar";
 import Topbar from "../components/dashboard/Topbar";
 
 import PromptEditor from "../components/workspace/PromptEditor";
+import ReferenceCharacter from "../components/workspace/ReferenceCharacter";
 import OutputType from "../components/workspace/OutputType";
 import StyleSelector from "../components/workspace/StyleSelector";
 import AspectRatio from "../components/workspace/AspectRatio";
@@ -10,6 +13,25 @@ import Watermark from "../components/workspace/Watermark";
 import GenerateButton from "../components/workspace/GenerateButton";
 
 function Workspace() {
+  const [prompt, setPrompt] = useState("");
+  const [outputType, setOutputType] = useState("Image");
+  const [style, setStyle] = useState("Realistic");
+  const [ratio, setRatio] = useState("9:16");
+  const [duration, setDuration] = useState("30 sec");
+
+  const handleGenerate = () => {
+    const request = {
+      prompt,
+      outputType,
+      style,
+      ratio,
+      duration,
+    };
+
+    console.log(request);
+    alert("Nova request created! Check the browser console.");
+  };
+
   return (
     <div className="flex bg-black text-white min-h-screen">
       <Sidebar />
@@ -26,15 +48,39 @@ function Workspace() {
         </p>
 
         <div className="mt-8">
-          <PromptEditor />
-          <OutputType />
-          <StyleSelector />
-          <AspectRatio />
-          <DurationSelector />
-          <Watermark />
-          <GenerateButton />
-        </div>
+          <PromptEditor
+            prompt={prompt}
+            setPrompt={setPrompt}
+          />
 
+          <ReferenceCharacter />
+
+          <OutputType
+            outputType={outputType}
+            setOutputType={setOutputType}
+          />
+
+          <StyleSelector
+            style={style}
+            setStyle={setStyle}
+          />
+
+          <AspectRatio
+            ratio={ratio}
+            setRatio={setRatio}
+          />
+
+          <DurationSelector
+            duration={duration}
+            setDuration={setDuration}
+          />
+
+          <Watermark />
+
+          <GenerateButton
+            onGenerate={handleGenerate}
+          />
+        </div>
       </main>
     </div>
   );

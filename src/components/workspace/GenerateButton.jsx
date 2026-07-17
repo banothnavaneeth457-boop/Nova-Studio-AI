@@ -1,9 +1,10 @@
-function GenerateButton() {
+function GenerateButton({ onGenerate }) {
   return (
     <button
-      className="w-full mt-8 py-4 rounded-2xl bg-purple-600 hover:bg-purple-700 text-xl font-semibold transition"
+      onClick={onGenerate}
+      className="w-full mt-8 bg-purple-600 hover:bg-purple-700 transition-all duration-300 rounded-2xl py-5 text-xl font-bold"
     >
-      ✨ Generate
+      ✨ Generate with Nova
     </button>
   );
 }

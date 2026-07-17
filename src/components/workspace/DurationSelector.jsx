@@ -1,4 +1,4 @@
-function DurationSelector() {
+function DurationSelector({ duration, setDuration }) {
   const durations = [
     "15 sec",
     "30 sec",
@@ -8,20 +8,33 @@ function DurationSelector() {
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mt-6">
-      <h2 className="text-xl font-bold mb-4">
+
+      <h2 className="text-2xl font-bold mb-6">
         Duration
       </h2>
 
-      <div className="flex gap-3 flex-wrap">
-        {durations.map((duration) => (
+      <div className="flex flex-wrap gap-4">
+
+        {durations.map((item) => (
+
           <button
-            key={duration}
-            className="px-6 py-3 rounded-xl bg-black border border-zinc-700 hover:border-purple-500 transition"
+            key={item}
+            onClick={() => setDuration(item)}
+            className={`px-8 py-4 rounded-xl border transition-all duration-300 font-semibold
+
+            ${
+              duration === item
+                ? "bg-purple-600 border-purple-500 shadow-lg shadow-purple-500/30 scale-105"
+                : "bg-black border-zinc-700 hover:border-purple-500 hover:scale-105"
+            }`}
           >
-            {duration}
+            {item}
           </button>
+
         ))}
+
       </div>
+
     </div>
   );
 }
