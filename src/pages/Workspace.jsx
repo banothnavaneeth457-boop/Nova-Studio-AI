@@ -1,89 +1,177 @@
 import { useState } from "react";
 
-import Sidebar from "../components/dashboard/Sidebar";
-import Topbar from "../components/dashboard/Topbar";
-
 import PromptEditor from "../components/workspace/PromptEditor";
 import ReferenceCharacter from "../components/workspace/ReferenceCharacter";
-import OutputType from "../components/workspace/OutputType";
 import StyleSelector from "../components/workspace/StyleSelector";
 import AspectRatio from "../components/workspace/AspectRatio";
 import DurationSelector from "../components/workspace/DurationSelector";
+import OutputType from "../components/workspace/OutputType";
 import Watermark from "../components/workspace/Watermark";
 import GenerateButton from "../components/workspace/GenerateButton";
 
-function Workspace() {
+export default function Workspace() {
   const [prompt, setPrompt] = useState("");
-  const [outputType, setOutputType] = useState("Image");
   const [style, setStyle] = useState("Realistic");
   const [ratio, setRatio] = useState("9:16");
   const [duration, setDuration] = useState("30 sec");
+  const [outputType, setOutputType] = useState("Image");
+  const [loading, setLoading] = useState(false);
+  const [enhancedPrompt, setEnhancedPrompt] = useState("");
+  const [generatedImage, setGeneratedImage] = useState(null);
 
-  const handleGenerate = () => {
-    const request = {
-      prompt,
-      outputType,
-      style,
-      ratio,
-      duration,
-    };
+  const handleGenerate = async () => {
+    if (!prompt.trim()) {
+      alert("Please enter what you want Nova to create.");
+      return;
+    }
 
-    console.log(request);
-    alert("Nova request created! Check the browser console.");
+    setLoading(true);
+    setEnhancedPrompt("");
+    setGeneratedImage(null);
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/ai/enhance",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt,
+            style,
+            ratio,
+            duration,
+            outputType,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("Nova Response:", data);
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Nova generation failed"
+        );
+      }
+
+      setEnhancedPrompt(data.prompt || "");
+
+      // ==========================================
+      // DISPLAY GENERATED IMAGE
+      // ==========================================
+
+      if (data.image?.data) {
+        const mimeType =
+          data.image.mimeType || "image/png";
+
+        const imageSrc =
+          `data:${mimeType};base64,${data.image.data}`;
+
+        setGeneratedImage(imageSrc);
+
+        console.log(
+          "✅ Nova image received and displayed."
+        );
+      } else {
+        console.warn(
+          "Nova response did not contain an image."
+        );
+      }
+
+    } catch (error) {
+      console.error("Nova Error:", error);
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex bg-black text-white min-h-screen">
-      <Sidebar />
+    <div className="max-w-6xl mx-auto space-y-6 pb-10">
 
-      <main className="flex-1 p-8 overflow-y-auto">
-        <Topbar />
+      <PromptEditor
+        prompt={prompt}
+        setPrompt={setPrompt}
+      />
 
-        <h1 className="text-4xl font-bold mt-8">
-          AI Workspace
-        </h1>
+      <ReferenceCharacter />
 
-        <p className="text-zinc-400 mt-2">
-          Create amazing AI content from a single prompt.
-        </p>
+      <StyleSelector
+        style={style}
+        setStyle={setStyle}
+      />
 
-        <div className="mt-8">
-          <PromptEditor
-            prompt={prompt}
-            setPrompt={setPrompt}
-          />
+      <div className="grid grid-cols-2 gap-6">
 
-          <ReferenceCharacter />
+        <AspectRatio
+          ratio={ratio}
+          setRatio={setRatio}
+        />
 
-          <OutputType
-            outputType={outputType}
-            setOutputType={setOutputType}
-          />
+        <DurationSelector
+          duration={duration}
+          setDuration={setDuration}
+        />
 
-          <StyleSelector
-            style={style}
-            setStyle={setStyle}
-          />
+      </div>
 
-          <AspectRatio
-            ratio={ratio}
-            setRatio={setRatio}
-          />
+      <div className="grid grid-cols-2 gap-6">
 
-          <DurationSelector
-            duration={duration}
-            setDuration={setDuration}
-          />
+        <OutputType
+          outputType={outputType}
+          setOutputType={setOutputType}
+        />
 
-          <Watermark />
+        <Watermark />
 
-          <GenerateButton
-            onGenerate={handleGenerate}
-          />
+      </div>
+
+      <GenerateButton
+        onGenerate={handleGenerate}
+        loading={loading}
+      />
+
+      {/* ==========================================
+          GENERATED IMAGE
+          ========================================== */}
+
+      {generatedImage && (
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mt-6">
+
+          <h2 className="text-2xl font-bold mb-4 text-white">
+            ✨ Nova Generated Image
+          </h2>
+
+          <div className="flex justify-center">
+
+            <img
+              src={generatedImage}
+              alt="Nova generated"
+              className="max-w-full max-h-[700px] rounded-xl object-contain"
+            />
+
+          </div>
+
         </div>
-      </main>
+      )}
+
+      {enhancedPrompt && (
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mt-6">
+
+          <h2 className="text-2xl font-bold mb-4 text-white">
+            ✨ Nova Enhanced Prompt
+          </h2>
+
+          <p className="text-zinc-300 leading-7">
+            {enhancedPrompt}
+          </p>
+
+        </div>
+      )}
+
     </div>
   );
 }
-
-export default Workspace;

@@ -1,3 +1,5 @@
+import Card from "../common/Card";
+
 function StyleSelector({ style, setStyle }) {
   const styles = [
     "Realistic",
@@ -9,11 +11,7 @@ function StyleSelector({ style, setStyle }) {
   ];
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mt-6">
-
-      <h2 className="text-2xl font-bold mb-6">
-        Style
-      </h2>
+    <Card title="Style">
 
       <div className="flex flex-wrap gap-4">
 
@@ -23,7 +21,6 @@ function StyleSelector({ style, setStyle }) {
             key={item}
             onClick={() => setStyle(item)}
             className={`px-6 py-3 rounded-xl transition-all duration-300 border font-semibold
-
             ${
               style === item
                 ? "bg-purple-600 border-purple-500 shadow-lg shadow-purple-500/30 scale-105"
@@ -38,7 +35,7 @@ function StyleSelector({ style, setStyle }) {
 
       </div>
 
-    </div>
+    </Card>
   );
 }
 

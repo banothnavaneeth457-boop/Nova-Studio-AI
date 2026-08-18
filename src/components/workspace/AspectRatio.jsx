@@ -1,3 +1,5 @@
+import Card from "../common/Card";
+
 function AspectRatio({ ratio, setRatio }) {
   const ratios = [
     "9:16",
@@ -7,11 +9,7 @@ function AspectRatio({ ratio, setRatio }) {
   ];
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mt-6">
-
-      <h2 className="text-2xl font-bold mb-6">
-        Aspect Ratio
-      </h2>
+    <Card title="Aspect Ratio">
 
       <div className="flex flex-wrap gap-4">
 
@@ -21,7 +19,6 @@ function AspectRatio({ ratio, setRatio }) {
             key={item}
             onClick={() => setRatio(item)}
             className={`px-8 py-4 rounded-xl border transition-all duration-300 font-semibold
-
             ${
               ratio === item
                 ? "bg-purple-600 border-purple-500 shadow-lg shadow-purple-500/30 scale-105"
@@ -35,7 +32,7 @@ function AspectRatio({ ratio, setRatio }) {
 
       </div>
 
-    </div>
+    </Card>
   );
 }
 

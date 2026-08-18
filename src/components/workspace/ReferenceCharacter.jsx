@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Card from "../common/Card";
 
 function ReferenceCharacter() {
   const [image, setImage] = useState(null);
@@ -12,12 +13,10 @@ function ReferenceCharacter() {
   };
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mt-6">
-      <h2 className="text-2xl font-bold mb-4">
-        👤 Reference Character
-      </h2>
+    <Card title="👤 Reference Character">
 
       <div className="border-2 border-dashed border-zinc-700 rounded-2xl p-10 text-center">
+
         {image ? (
           <img
             src={image}
@@ -42,8 +41,10 @@ function ReferenceCharacter() {
           onChange={handleUpload}
           className="mt-6"
         />
+
       </div>
-    </div>
+
+    </Card>
   );
 }
 
